@@ -1,5 +1,5 @@
-import { fetchGridData } from "@p-stream/providers";
-import type { GridData } from "@p-stream/providers";
+// import { fetchGridData } from "@p-stream/providers";
+// import type { GridData } from "@p-stream/providers";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useCopyToClipboard } from "react-use";
@@ -53,103 +53,104 @@ function StyleTrans(props: { k: string }) {
   );
 }
 
-function OriginalFileView({ id }: { id: string }) {
-  const router = useOverlayRouter(id);
-  const { t } = useTranslation();
-  const meta = usePlayerStore((s) => s.meta);
-  const selectedCaption = usePlayerStore((s) => s.caption?.selected);
-  const [data, setData] = useState<GridData | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-
-  const tmdbId = meta?.tmdbId;
-
-  useEffect(() => {
-    if (!tmdbId) return;
-    let cancelled = false;
-    setLoading(true);
-    setError(false);
-
-    fetchGridData(tmdbId).then((json) => {
-      if (!cancelled) setData(json);
-    }).catch(() => {
-      if (!cancelled) setError(true);
-    }).finally(() => {
-      if (!cancelled) setLoading(false);
-    });
-
-    return () => { cancelled = true; };
-  }, [tmdbId]);
-
-  const openSubtitleDownload = useCallback(() => {
-    const dataUrl = selectedCaption
-      ? convertSubtitlesToSrtDataurl(selectedCaption?.srtData)
-      : null;
-    if (!dataUrl) return;
-    window.open(dataUrl);
-  }, [selectedCaption]);
-
-  const hasDownloads = data?.downloads && data.downloads.length > 0;
-
-  return (
-    <>
-      <Menu.BackLink onClick={() => router.navigate("/download")}>
-        {t("player.menus.downloads.original.cardTitle")}
-      </Menu.BackLink>
-      <Menu.Section>
-        {loading && (
-          <Menu.Paragraph marginClass="mb-4">
-            {t("player.menus.downloads.original.loading")}
-          </Menu.Paragraph>
-        )}
-        {error && (
-          <Menu.Paragraph marginClass="mb-4">
-            {t("player.menus.downloads.original.error")}
-          </Menu.Paragraph>
-        )}
-        {!loading && !error && !hasDownloads && (
-          <Menu.Paragraph marginClass="mb-4">
-            {t("player.menus.downloads.original.noResults")}
-          </Menu.Paragraph>
-        )}
-        {hasDownloads && data?.downloads.map((dl, i) => (
-          <div
-            key={`${dl.title}-${i}`}
-            className="w-full rounded-lg bg-video-context-light/10 p-3 mb-2"
-          >
-            <p className="text-xs text-video-context-type-main break-all mb-1">
-              {dl.title}
-            </p>
-            <p className="text-xs text-video-context-type-secondary mb-2">
-              {dl.size}
-            </p>
-            <div className="flex gap-2 flex-wrap">
-              {dl.sources.map((src, j) => (
-                <a
-                  key={`${src.url}-${j}`}
-                  href={src.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 min-w-0 text-center px-3 py-1.5 rounded bg-video-context-type-accent/20 hover:bg-video-context-type-accent/40 transition-colors text-xs font-medium text-video-context-type-main"
-                >
-                  {src.name}
-                </a>
-              ))}
-            </div>
-          </div>
-        ))}
-        <Button
-          className="w-full mt-2"
-          onClick={openSubtitleDownload}
-          disabled={!selectedCaption}
-          theme="secondary"
-        >
-          {t("player.menus.downloads.downloadSubtitle")}
-        </Button>
-      </Menu.Section>
-    </>
-  );
-}
+// OriginalFileView disabled - fetchGridData not available in this fork
+// function OriginalFileView({ id }: { id: string }) {
+//   const router = useOverlayRouter(id);
+//   const { t } = useTranslation();
+//   const meta = usePlayerStore((s) => s.meta);
+//   const selectedCaption = usePlayerStore((s) => s.caption?.selected);
+//   const [data, setData] = useState<GridData | null>(null);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState(false);
+//
+//   const tmdbId = meta?.tmdbId;
+//
+//   useEffect(() => {
+//     if (!tmdbId) return;
+//     let cancelled = false;
+//     setLoading(true);
+//     setError(false);
+//
+//     fetchGridData(tmdbId).then((json) => {
+//       if (!cancelled) setData(json);
+//     }).catch(() => {
+//       if (!cancelled) setError(true);
+//     }).finally(() => {
+//       if (!cancelled) setLoading(false);
+//     });
+//
+//     return () => { cancelled = true; };
+//   }, [tmdbId]);
+//
+//   const openSubtitleDownload = useCallback(() => {
+//     const dataUrl = selectedCaption
+//       ? convertSubtitlesToSrtDataurl(selectedCaption?.srtData)
+//       : null;
+//     if (!dataUrl) return;
+//     window.open(dataUrl);
+//   }, [selectedCaption]);
+//
+//   const hasDownloads = data?.downloads && data.downloads.length > 0;
+//
+//   return (
+//     <>
+//       <Menu.BackLink onClick={() => router.navigate("/download")}>
+//         {t("player.menus.downloads.original.cardTitle")}
+//       </Menu.BackLink>
+//       <Menu.Section>
+//         {loading && (
+//           <Menu.Paragraph marginClass="mb-4">
+//             {t("player.menus.downloads.original.loading")}
+//           </Menu.Paragraph>
+//         )}
+//         {error && (
+//           <Menu.Paragraph marginClass="mb-4">
+//             {t("player.menus.downloads.original.error")}
+//           </Menu.Paragraph>
+//         )}
+//         {!loading && !error && !hasDownloads && (
+//           <Menu.Paragraph marginClass="mb-4">
+//             {t("player.menus.downloads.original.noResults")}
+//           </Menu.Paragraph>
+//         )}
+//         {hasDownloads && data?.downloads.map((dl, i) => (
+//           <div
+//             key={`${dl.title}-${i}`}
+//             className="w-full rounded-lg bg-video-context-light/10 p-3 mb-2"
+//           >
+//             <p className="text-xs text-video-context-type-main break-all mb-1">
+//               {dl.title}
+//             </p>
+//             <p className="text-xs text-video-context-type-secondary mb-2">
+//               {dl.size}
+//             </p>
+//             <div className="flex gap-2 flex-wrap">
+//               {dl.sources.map((src, j) => (
+//                 <a
+//                   key={`${src.url}-${j}`}
+//                   href={src.url}
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                   className="flex-1 min-w-0 text-center px-3 py-1.5 rounded bg-video-context-type-accent/20 hover:bg-video-context-type-accent/40 transition-colors text-xs font-medium text-video-context-type-main"
+//                 >
+//                   {src.name}
+//                 </a>
+//               ))}
+//             </div>
+//           </div>
+//         ))}
+//         <Button
+//           className="w-full mt-2"
+//           onClick={openSubtitleDownload}
+//           disabled={!selectedCaption}
+//           theme="secondary"
+//         >
+//           {t("player.menus.downloads.downloadSubtitle")}
+//         </Button>
+//       </Menu.Section>
+//     </>
+//   );
+// }
 
 function StreamLinkView({ id }: { id: string }) {
   const router = useOverlayRouter(id);
@@ -305,7 +306,8 @@ export function DownloadView({ id }: { id: string }) {
       </Menu.BackLink>
       <Menu.Section>
         <div className="flex flex-col gap-3 mt-2">
-          <button
+          {/* Original file download disabled - not available in self-hosted */}
+          {/* <button
             type="button"
             className={`w-full rounded-lg bg-video-context-light/10 transition-colors p-4 text-left relative group ${isPstream ? "hover:bg-video-context-light/20 cursor-pointer" : "opacity-50 cursor-not-allowed"}`}
             onClick={() => isPstream && router.navigate("/download/original")}
@@ -344,7 +346,7 @@ export function DownloadView({ id }: { id: string }) {
               {t("player.menus.downloads.or")}
             </span>
             <div className="flex-1 h-px bg-video-context-border" />
-          </div>
+          </div> */}
 
           <button
             type="button"
@@ -442,11 +444,12 @@ export function DownloadRoutes({ id }: { id: string }) {
           <DownloadView id={id} />
         </Menu.CardWithScrollable>
       </OverlayPage>
-      <OverlayPage id={id} path="/download/original" width={343} height={440}>
+      {/* Original file download route disabled */}
+      {/* <OverlayPage id={id} path="/download/original" width={343} height={440}>
         <Menu.CardWithScrollable>
           <OriginalFileView id={id} />
         </Menu.CardWithScrollable>
-      </OverlayPage>
+      </OverlayPage> */}
       <OverlayPage id={id} path="/download/stream" width={343} height={480}>
         <Menu.CardWithScrollable>
           <StreamLinkView id={id} />
